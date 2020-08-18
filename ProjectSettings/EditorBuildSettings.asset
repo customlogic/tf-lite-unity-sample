@@ -32,4 +32,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Samples/Bert/Bert.unity
     guid: a09d7e2da582c4bfdb3aebd6a0e9779f
+  - enabled: 1
+    path: Assets/Samples/FaceMesh/FaceMesh.unity
+    guid: ee992562708f741eea0c91f63689caed
   m_configObjects: {}
