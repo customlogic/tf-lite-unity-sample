@@ -24,6 +24,14 @@ public class FaceMeshSample : MonoBehaviour
   Vector3[] rtCorners = new Vector3[4]; // just cache for GetWorldCorners
   Matrix4x4[] vertexMatrices = new Matrix4x4[FaceLandmarkDetect.VERTEX_COUNT];
 
+
+  [SerializeField] Texture2D testTexture = null;
+
+  bool doDetectNextFrame = true;
+  bool faceFound = false;
+
+  FaceDetect.Face lastFace;
+
   // Start is called before the first frame update
   void Start()
   {
@@ -64,27 +72,56 @@ public class FaceMeshSample : MonoBehaviour
   // Update is called once per frame
   void Update()
   {
+    if (Input.GetKeyDown("space"))
+    {
+      doDetectNextFrame = true;
+    }
+
     var resizeOptions = faceDetect.ResizeOptions;
     resizeOptions.rotationDegree = webcamTexture.videoRotationAngle;
     faceDetect.ResizeOptions = resizeOptions;
 
-    faceDetect.Invoke(webcamTexture);
-    cameraView.material = faceDetect.transformMat;
-
-    var faces = faceDetect.GetResults(0.75f, 0.3f);
-    UpdateFrame(faces);
-
-    if (faces.Count <= 0)
+    if (doDetectNextFrame)
     {
-      return;
+      faceDetect.Invoke(webcamTexture);
+      cameraView.material = faceDetect.transformMat;
+
+      var faces = faceDetect.GetResults(0.75f, 0.3f);
+      UpdateFrame(faces);
+
+      doDetectNextFrame = false;
+
+      if (faces.Count <= 0)
+      {
+        faceFound = false;
+      }
+      else
+      {
+        faceFound = true;
+        lastFace = faces[0];
+      }
     }
 
-    // Detect only first face
-    landmarkDetect.Invoke(webcamTexture, faces[0]);
-    debugFaceView.texture = landmarkDetect.inputTex;
 
-    var vertices = landmarkDetect.GetResult().vertices;
-    DrawVertices(vertices);
+    if (faceFound)
+    {
+      // Detect only first face
+      landmarkDetect.Invoke(webcamTexture, lastFace);
+      debugFaceView.texture = landmarkDetect.inputTex;
+
+      var vertices = landmarkDetect.GetResult().vertices;
+      DrawVertices(vertices);
+    }
+
+    /*
+        landmarkDetect.Invoke(testTexture);
+        debugFaceView.texture = landmarkDetect.inputTex;
+        cameraView.texture = landmarkDetect.inputTex;
+
+        var vertices = landmarkDetect.GetResult().vertices;
+        DrawVertices(vertices);
+        */
+
   }
   void UpdateFrame(List<FaceDetect.Face> faces)
   {

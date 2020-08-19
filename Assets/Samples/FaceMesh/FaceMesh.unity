@@ -478,6 +478,7 @@ MonoBehaviour:
   debugFaceView: {fileID: 1302103928}
   jointMesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
   jointMaterial: {fileID: 2100000, guid: 64fa9181b2dca463282b3020843e19f7, type: 2}
+  testTexture: {fileID: 2800000, guid: c8ff6ae6acf2d4a769d446cb56ebef5e, type: 3}
 --- !u!4 &1453601107
 Transform:
   m_ObjectHideFlags: 0
